@@ -1,8 +1,8 @@
-import { Component,OnInit } from '@angular/core';
-import {HttpService} from './http.service';
-import{Headers, RequestOptions} from '@angular/http'
+import { Component, OnInit } from '@angular/core';
+import { HttpService } from './http.service';
+import { Headers, RequestOptions } from '@angular/http'
 import 'rxjs/add/observable/throw';
-import {Hero} from './hero'
+import { User } from './user';
 
 // Operators
 import 'rxjs/add/operator/catch';
@@ -13,19 +13,21 @@ import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/toPromise';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.less']
 })
 export class AppComponent implements OnInit {
-  title = 'app works!';
-  errorMessage: string;
-  heroes:Hero[];
-  constructor(private http:HttpService){}
-  ngOnInit(){
-    this.http.getHeroes().subscribe(
-                       heroes => this.heroes = heroes,
-                       error =>  this.errorMessage = <any>error);
-
-  }
+    errorMessage: string;
+    heroes: User[];
+    constructor(private http: HttpService) {}
+    private sortFn(a: User, b: User): number {
+        return a.id - b.id
+    }
+    ngOnInit() {
+        this.http.getHeroes('octocat').subscribe(
+            heroes => this.heroes = heroes.sort(this.sortFn),
+            error => this.errorMessage = < any > error
+        );
+    }
 }
